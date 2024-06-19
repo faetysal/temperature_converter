@@ -80,41 +80,8 @@ fn main() {
 	println!("\n{x} Temperature Converter {x}\n", x = "#".repeat(5));
 	println!("(C = Celcius, K = Kelvin, F = Fahrenheit");
 
-	let input_unit = loop {
-		println!("Enter input unit (C/K/F):");
-		let mut input_unit = String::new();
-		io::stdin()
-			.read_line(&mut input_unit)
-			.expect("Failed to read line");
-
-		let x = input_unit.trim().to_lowercase();
-		match  x.as_str() {
-			"c" | "k" | "f" => break x,
-			_ => {
-				println!("Invalid unit");
-				continue 
-			}
-		};
-	};
-
-	let output_unit = loop {
-		println!("Enter output unit (C/K/F):");
-		let mut output_unit = String::new();
-		io::stdin()
-			.read_line(&mut output_unit)
-			.expect("Failed to read line");
-
-		let x = output_unit.trim().to_lowercase();
-		match x.as_str() {
-			"c" | "k" | "f" => {
-				break x;
-			},
-			_ => {
-				println!("Invalid unit");
-				continue 
-			}
-		};
-	};
+	let input_unit = unit_prompt("Enter input unit (C/K/F):");
+	let output_unit = unit_prompt("Enter output unit (C/K/F):");
 
 	let input: f32 = loop {
 		println!("Enter input value:");
@@ -135,7 +102,30 @@ fn main() {
 	let input_temperature = Temperature::new(input, &input_unit);
 	let output_temperature = input_temperature.to(&output_unit);
 
-	println!("\n{} -> {} = {}", input_temperature, output_temperature.scale.kind.unit(), output_temperature);
+	println!("\n{} -> {} = {}", 
+    input_temperature, 
+    output_temperature.scale.kind.unit(), 
+    output_temperature
+  );
 
 	// println!("75C -> F = {}", output_temperature);
+}
+
+fn unit_prompt(message: &str) -> String {
+  loop {
+		println!("{message}");
+		let mut input_unit = String::new();
+		io::stdin()
+			.read_line(&mut input_unit)
+			.expect("Failed to read line");
+
+		let x = input_unit.trim().to_lowercase();
+		match  x.as_str() {
+			"c" | "k" | "f" => break x,
+			_ => {
+				println!("Invalid unit");
+				continue 
+			}
+		};
+	}
 }
